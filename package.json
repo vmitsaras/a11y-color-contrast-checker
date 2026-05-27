@@ -1,5 +1,5 @@
 {
-  "name": "a11y-color-contrast-checker",
+  "name": "@vmitsaras/a11y-color-contrast-checker",
   "version": "1.0.0",
   "description": "A standalone, dependency-free Web Component for checking foreground/background color contrast.",
   "type": "module",
