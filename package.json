@@ -4,10 +4,34 @@
   "description": "A standalone, dependency-free Web Component for checking foreground/background color contrast.",
   "type": "module",
   "main": "src/a11y-color-contrast-checker.js",
+  "exports": {
+    ".": "./src/a11y-color-contrast-checker.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack:check": "npm pack --dry-run",
+    "release:patch": "npm version patch",
+    "release:minor": "npm version minor",
+    "release:major": "npm version major",
+    "release:beta": "npm version prerelease --preid=beta",
+    "publish:public": "npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmitsaras/a11y-color-contrast-checker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vmitsaras/a11y-color-contrast-checker/issues"
+  },
+  "homepage": "https://github.com/vmitsaras/a11y-color-contrast-checker#readme",
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "vite": "^5.4.0"
