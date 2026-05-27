@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>a11y Color Contrast Checker — Demo</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 960px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.6;
+        color: #1a1a1a;
+      }
+      h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+      p.subtitle { color: #555; margin-top: 0; margin-bottom: 2rem; }
+      h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 2rem;
+        margin-top: 1rem;
+      }
+      .demo-block { display: flex; flex-direction: column; gap: 0.5rem; }
+      .demo-block label { font-weight: 600; font-size: 0.875rem; display: block; margin-bottom: 0.25rem; }
+      .demo-block input[type="text"] {
+        padding: 0.4rem 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      pre { background: #f6f8fa; border-radius: 4px; padding: 1rem; overflow-x: auto; font-size: 0.8rem; }
+      #event-log { max-height: 200px; overflow-y: auto; }
+      .api-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+      .api-buttons button {
+        padding: 0.4rem 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+      .api-buttons button:hover { background: #f0f0f0; }
+    </style>
+  </head>
+  <body>
+    <h1>a11y Color Contrast Checker</h1>
+    <p class="subtitle">A standalone, dependency-free Web Component for checking WCAG color contrast.</p>
+
+    <h2>Basic usage (default colors)</h2>
+    <div class="demo-grid">
+      <a11y-color-contrast-checker></a11y-color-contrast-checker>
+    </div>
+
+    <h2>Pre-configured via attributes</h2>
+    <div class="demo-grid">
+      <a11y-color-contrast-checker
+        foreground="#777777"
+        background="#ffffff"
+        show-suggestions
+      ></a11y-color-contrast-checker>
+
+      <a11y-color-contrast-checker
+        foreground="#ffffff"
+        background="#003087"
+        show-suggestions
+      ></a11y-color-contrast-checker>
+    </div>
+
+    <h2>Mode: text only</h2>
+    <a11y-color-contrast-checker
+      foreground="#595959"
+      background="#ffffff"
+      mode="text"
+    ></a11y-color-contrast-checker>
+
+    <h2>Readonly mode (result display only)</h2>
+    <a11y-color-contrast-checker
+      foreground="#000000"
+      background="#ffff00"
+      readonly
+    ></a11y-color-contrast-checker>
+
+    <h2>Hidden preview</h2>
+    <a11y-color-contrast-checker
+      foreground="#1a1a1a"
+      background="#f9f9f9"
+      hide-preview
+    ></a11y-color-contrast-checker>
+
+    <h2>External input sources</h2>
+    <div class="demo-block">
+      <label for="ext-fg">Foreground input (drives the checker below)</label>
+      <input type="text" id="ext-fg" value="#aa3300" />
+      <label for="ext-bg">Background input</label>
+      <input type="text" id="ext-bg" value="#fffbe6" />
+    </div>
+    <br />
+    <a11y-color-contrast-checker
+      foreground-source="#ext-fg"
+      background-source="#ext-bg"
+      auto-update
+      show-suggestions
+    ></a11y-color-contrast-checker>
+
+    <h2>JavaScript API</h2>
+    <a11y-color-contrast-checker id="api-checker" foreground="#333333" background="#ffffff" show-suggestions></a11y-color-contrast-checker>
+    <div class="api-buttons">
+      <button onclick="apiChecker.setColors({ foreground: '#0057b8', background: '#ffffff' })">setColors (blue/white)</button>
+      <button onclick="apiChecker.setForeground('#cc0000')">setForeground (red)</button>
+      <button onclick="apiChecker.setBackground('#1a1a1a')">setBackground (dark)</button>
+      <button onclick="console.log('getResult():', apiChecker.getResult())">getResult() → console</button>
+      <button onclick="apiChecker.reset()">reset()</button>
+    </div>
+
+    <h2>Custom events log</h2>
+    <pre id="event-log" aria-label="Event log" aria-live="polite">(listening for events…)</pre>
+
+    <script type="module" src="/src/a11y-color-contrast-checker.js"></script>
+    <script>
+      const apiChecker = document.getElementById('api-checker');
+      const log = document.getElementById('event-log');
+      let logEntries = [];
+
+      function addLog(name, detail) {
+        const entry = `[${name}] ${JSON.stringify(detail, null, 2)}`;
+        logEntries.unshift(entry);
+        if (logEntries.length > 10) logEntries = logEntries.slice(0, 10);
+        log.textContent = logEntries.join('\n\n---\n\n');
+      }
+
+      document.addEventListener('a11y-contrast-change', (e) => {
+        addLog('a11y-contrast-change', {
+          ratio: e.detail.result?.roundedRatio,
+          normalAA: e.detail.result?.normalText?.aa,
+          normalAAA: e.detail.result?.normalText?.aaa
+        });
+      });
+      document.addEventListener('a11y-contrast-error', (e) => addLog('a11y-contrast-error', e.detail));
+      document.addEventListener('a11y-contrast-apply-suggestion', (e) => addLog('a11y-contrast-apply-suggestion', e.detail));
+      document.addEventListener('a11y-contrast-copy', (e) => addLog('a11y-contrast-copy', e.detail));
+    </script>
+  </body>
+</html>
