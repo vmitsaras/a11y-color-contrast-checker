@@ -1,0 +1,273 @@
+/* =====================================================
+   a11y-color-contrast-checker — Shadow DOM styles
+   Customise via CSS custom properties and ::part()
+   ===================================================== */
+
+:host {
+  display: block;
+  font-family: var(--a11y-contrast-checker-font-family, system-ui, -apple-system, sans-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--a11y-contrast-checker-foreground, #1a1a1a);
+  background: var(--a11y-contrast-checker-background, #ffffff);
+  border: 1px solid var(--a11y-contrast-checker-border-color, #d0d0d0);
+  border-radius: var(--a11y-contrast-checker-radius, 8px);
+  padding: 1.5rem;
+  max-width: 480px;
+  box-sizing: border-box;
+}
+
+:host([hidden]) { display: none; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ---- Headings ---- */
+.checker-heading {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ---- Form ---- */
+.form { margin-bottom: 1rem; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.field-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.field-row input[type="text"] { flex: 1; }
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 2px solid var(--a11y-contrast-checker-border-color, #c0c0c0);
+  border-radius: calc(var(--a11y-contrast-checker-radius, 8px) / 2);
+  font-size: 0.9375rem;
+  font-family: monospace;
+  color: inherit;
+  background: var(--a11y-contrast-checker-background, #ffffff);
+}
+
+input[type="text"]:focus {
+  outline: 3px solid var(--a11y-contrast-checker-focus-ring, #0057b8);
+  outline-offset: 2px;
+  border-color: var(--a11y-contrast-checker-focus-ring, #0057b8);
+}
+
+input[type="text"]:read-only {
+  background: #f6f6f6;
+  color: #555;
+  cursor: default;
+}
+
+/* Colour swatch / native colour input */
+input[type="color"] {
+  appearance: none;
+  width: 2.75rem;
+  height: 2.5rem;
+  border: 2px solid var(--a11y-contrast-checker-border-color, #c0c0c0);
+  border-radius: calc(var(--a11y-contrast-checker-radius, 8px) / 2);
+  padding: 2px;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+input[type="color"]:focus {
+  outline: 3px solid var(--a11y-contrast-checker-focus-ring, #0057b8);
+  outline-offset: 2px;
+}
+
+input[type="color"]:disabled { opacity: 0.5; cursor: default; }
+
+/* ---- Buttons ---- */
+button {
+  padding: 0.4375rem 0.875rem;
+  border: 2px solid currentColor;
+  border-radius: calc(var(--a11y-contrast-checker-radius, 8px) / 2);
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background 0.15s ease;
+}
+
+button:focus {
+  outline: 3px solid var(--a11y-contrast-checker-focus-ring, #0057b8);
+  outline-offset: 2px;
+}
+
+button:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
+button:disabled { opacity: 0.5; cursor: default; }
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---- Preview ---- */
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: calc(var(--a11y-contrast-checker-radius, 8px) / 2);
+  border: 2px solid var(--a11y-contrast-checker-border-color, #d0d0d0);
+  margin-bottom: 1.25rem;
+  min-height: 80px;
+}
+
+.preview-text-normal { font-size: 1rem; }
+.preview-text-large  { font-size: 1.5rem; font-weight: 700; }
+
+/* ---- Summary / ratio ---- */
+.summary {
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ratio-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratio-label { font-size: 0.875rem; color: #555; }
+
+/* ---- Results list ---- */
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--a11y-contrast-checker-border-color, #e0e0e0);
+}
+
+.results-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--a11y-contrast-checker-border-color, #e0e0e0);
+  gap: 0.5rem;
+}
+
+.result-label { font-size: 0.9rem; }
+
+.result-status {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  /* Never colour alone: always shows text "Pass" / "Fail" */
+}
+
+.result-status.pass {
+  color: var(--a11y-contrast-checker-pass-color, #006600);
+  background: var(--a11y-contrast-checker-pass-bg, #e8f5e9);
+}
+
+.result-status.fail {
+  color: var(--a11y-contrast-checker-fail-color, #a30000);
+  background: var(--a11y-contrast-checker-fail-bg, #fff0f0);
+}
+
+/* ---- Suggestions ---- */
+.suggestions-section {
+  padding-top: 1rem;
+  border-top: 1px solid var(--a11y-contrast-checker-border-color, #e0e0e0);
+  margin-bottom: 0.5rem;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--a11y-contrast-checker-border-color, #f0f0f0);
+  flex-wrap: wrap;
+}
+
+.suggestion-swatch {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.suggestion-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.suggestion-color {
+  font-family: monospace;
+  font-size: 0.875rem;
+  flex: 1;
+}
+
+.suggestion-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.suggestion-actions button {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+}
+
+/* ---- Error / warning ---- */
+.error-container {
+  padding: 0.75rem 1rem;
+  border-radius: calc(var(--a11y-contrast-checker-radius, 8px) / 2);
+  border: 2px solid var(--a11y-contrast-checker-warning-color, #a30000);
+  color: var(--a11y-contrast-checker-warning-color, #a30000);
+  background: #fff8f8;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* ---- Visually hidden (screen-reader-only) ---- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
