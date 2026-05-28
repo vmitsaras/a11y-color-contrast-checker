@@ -44,6 +44,24 @@ Production output is generated in dist/.
 npm run preview
 ```
 
+## GitHub Pages (Deploy From A Branch)
+
+This repository is ready for GitHub Pages using the built-in branch source:
+
+1. Go to Settings -> Pages.
+2. Under Build and deployment, set Source to Deploy from a branch.
+3. Select Branch: main and Folder: /docs.
+4. Save and wait a few minutes for publishing.
+
+Published URL:
+
+- https://vmitsaras.github.io/a11y-color-contrast-checker/
+
+Notes:
+
+- The Pages entry file is docs/index.html.
+- The Pages demo loads the package from jsDelivr, so it reflects the latest published npm version.
+
 ## Basic Usage
 
 Import the component module once, then use the custom element in HTML.
