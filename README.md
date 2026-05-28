@@ -6,6 +6,8 @@ between foreground and background colors.
 It is built with native Web Components + Shadow DOM (no React/Vue/Lit runtime),
 and supports both interactive input and programmatic usage.
 
+[Open the demo](https://vmitsaras.github.io/a11y-color-contrast-checker/)
+
 ## Features
 
 - WCAG ratio calculation with pass/fail statuses for normal text AA/AAA,
