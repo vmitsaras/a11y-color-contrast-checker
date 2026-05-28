@@ -36,7 +36,7 @@ Vite will start a local dev server for [index.html](index.html).
 npm run build
 ```
 
-Production output is generated in dist/.
+Production output is generated in docs/.
 
 ## Preview Production Build
 
@@ -60,7 +60,12 @@ Published URL:
 Notes:
 
 - The Pages entry file is docs/index.html.
-- The Pages demo loads the package from jsDelivr, so it reflects the latest published npm version.
+- The Pages demo module is docs/a11y-color-contrast-checker.js (built from src/).
+- Rebuild the docs bundle after component changes:
+
+```bash
+npm run build
+```
 
 ## Basic Usage
 
